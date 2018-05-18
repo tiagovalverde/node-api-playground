@@ -40,6 +40,6 @@ User.findById(id_user).then((user) => {
         return console.log('user Id not found');
     }
     // found
-    console.log(JSON.stringify(user, undefined,2))
+    console.log(JSON.stringify(user, undefined,2));
 }).catch((e) => console.log(e)); //invalid id
 
