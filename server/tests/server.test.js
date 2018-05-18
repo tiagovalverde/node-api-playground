@@ -99,13 +99,13 @@ describe('GET /todos/:id', () => {
             .get(`/todos/${new ObjectID().toHexString()}`)
             .expect(404)
             .end(done);
-    })
+    });
 
     it('should return a 404 for not valid object ids', (done) => {
         request(app)
         .get(`/todos/111`)
         .expect(404)
         .end(done);
-    })
+    });
 
 })
