@@ -13,7 +13,7 @@ var app = express();
 app.use(bodyParser.json());
 
 //routes
-// POST 
+// POST /todos
 app.post('/todos', (req, res) => {
     
     var todo = new Todo({
@@ -37,7 +37,7 @@ app.get('/todos', (req, res) => {
 })
 
 
-// GET /todos/{id}
+// GET /todos/:id
 app.get('/todos/:id', (req, res) => {
     var id = req.params.id;
     // validate id
@@ -60,6 +60,41 @@ app.get('/todos/:id', (req, res) => {
         sucess: false,
         message: 'Bad Request'
     }))
+});
+
+// DELETE /todos/:id
+app.delete('/todos/:id', (req, res) => {
+
+    let id = req.params.id;
+    // not valid id 404
+    if(!ObjectID.isValid(id)) {
+        return res.status(404).send({
+            success: false,
+            message: "Invalid id"
+        })
+    }
+
+    Todo.findByIdAndRemove(id).then((todo) => {
+        // no record in mongo
+        if(!todo) {
+            return res.status(404).send({
+                success: false,
+                message: 'Todo not found'
+            })
+        }
+        res.status(200).send({
+            todo,
+            success: true,
+            message: 'Todo deleted'
+        })
+    }).catch((e) => {
+        res.status(400).send({
+            todo: {},
+            success: false,
+            message: e
+        })
+    });
+
 });
 
 const port = process.env.PORT || 3000;
