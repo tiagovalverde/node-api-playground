@@ -55,7 +55,7 @@ app.get('/todos/:id', (req, res) => {
                 message: 'Todo not found'
             });
         }
-        res.status(200).send(todo);
+        res.status(200).send({todo});
     }).catch((e) => res.status(400).send({
         sucess: false,
         message: 'Bad Request'
