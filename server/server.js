@@ -1,3 +1,5 @@
+require('./config/config');
+
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -9,6 +11,7 @@ let {Todo} = require('./models/todo');
 let {User} = require('./models/user');
 
 var app = express();
+const port = process.env.PORT;
 
 //middleware (server now handles json)
 app.use(bodyParser.json());
@@ -128,7 +131,7 @@ app.patch('/todos/:id', (req, res) => {
             })
         }
 
-        res.status(404).send({
+        res.status(200).send({
             todo,
             success: true,
             message: 'Todo updated'
@@ -142,7 +145,6 @@ app.patch('/todos/:id', (req, res) => {
     });
 });
 
-const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Started on server ${port}`);
 })
