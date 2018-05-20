@@ -1,5 +1,6 @@
-let express = require('express');
-let bodyParser = require('body-parser');
+const _ = require('lodash');
+const express = require('express');
+const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
 
 //local imports
@@ -94,7 +95,51 @@ app.delete('/todos/:id', (req, res) => {
             message: e
         })
     });
+});
 
+// PATCH /todos/:id (UPDATE)
+app.patch('/todos/:id', (req, res) => {
+    let id = req.params.id;
+    // filter params that can be updated
+    let body = _.pick(req.body, ['text', 'completed']);
+
+    if(!ObjectID.isValid(id)) {
+        return res.status(404).send({
+            success: false,
+            message: "Invalid id"
+        })
+    }
+ 
+    if(_.isBoolean(body.completed) && body.completed) {
+        body.completedAt = new Date().getTime();
+    } else {
+        body.completed = false;
+        body.completedAt = null;
+    }
+
+    Todo.findByIdAndUpdate(id, 
+        {$set: body},
+        {new: true}
+    ).then((todo) => {
+        if(!todo) {
+            res.status(404).send({
+                success: false,
+                message: 'Todo not found'
+            })
+        }
+
+        res.status(404).send({
+            todo,
+            success: true,
+            message: 'Todo updated'
+        });
+
+    }).catch((e) => {
+        res.status(400).send({
+            success: false,
+            message: 'Bad request'
+        });
+    });
 });
 
 const port = process.env.PORT || 3000;
