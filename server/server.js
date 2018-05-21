@@ -10,6 +10,8 @@ let {mongoose} = require('./db/mondoose');
 let {Todo} = require('./models/todo');
 let {User} = require('./models/user');
 
+let {authenticate} = require('./middleware/authenticate.js');
+
 var app = express();
 const port = process.env.PORT;
 
@@ -159,7 +161,11 @@ app.post('/users', (req, res) => {
     }).then((token) => {
         res.header('x-auth', token).send(user);
     }).catch((e) => {
-        res.status(400).send(e);
+        res.status(401).send({
+            todo: {},
+            success: false,
+            message: e.errmsg
+        });
     })
 })
 
@@ -169,6 +175,12 @@ app.post('/users', (req, res) => {
 // GET /users/:id
 // DELETE /users/:id
 // PATCH /users/:id
+
+// middleware auth
+
+app.get('/users/me', authenticate, (req, res) => {
+   res.status(200).send(req.user);
+})
 
 app.listen(port, () => {
     console.log(`Started on server ${port}`);
