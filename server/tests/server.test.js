@@ -3,7 +3,7 @@ let request = require('supertest');
 const {ObjectID} = require('mongodb');
 
 //local files (server, todo model)
-let {app} = require('./../server');
+let {app} = require('./../server').default;
 let {Todo} = require('./../models/todo');
 
 // dummy data

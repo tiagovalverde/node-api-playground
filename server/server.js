@@ -145,6 +145,31 @@ app.patch('/todos/:id', (req, res) => {
     });
 });
 
+// user request
+// POST /users
+app.post('/users', (req, res) => {
+    let body = _.pick(req.body, ['email', 'password']);
+    let user = new User({
+        email: body.email,
+        password: body.password
+    });
+
+    user.save().then(() => {
+        return user.generateAuthToken();
+    }).then((token) => {
+        res.header('x-auth', token).send(user);
+    }).catch((e) => {
+        res.status(400).send(e);
+    })
+})
+
+
+
+// GET /users
+// GET /users/:id
+// DELETE /users/:id
+// PATCH /users/:id
+
 app.listen(port, () => {
     console.log(`Started on server ${port}`);
 })
