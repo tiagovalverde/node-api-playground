@@ -48,7 +48,7 @@ UserSchema.methods.generateAuthToken = function () {
     // arrow fn do not bind keyword
     var user = this;
     var access = 'auth';
-    var token = jwt.sign({_id: user._id.toHexString(), access}, '123456').toString();
+    var token = jwt.sign({_id: user._id.toHexString(), access}, 'abc123').toString();
 
     user.tokens.push({access, token});
 
@@ -62,7 +62,7 @@ UserSchema.statics.findByToken = function (token) {
     var decoded;
 
     try {
-       decoded =  jwt.verify(token, '123456')
+       decoded =  jwt.verify(token, 'abc123')
     } catch(e) {
         return Promise.reject();
     }
@@ -90,6 +90,7 @@ UserSchema.pre('save', function (next) {
         next();
     }
 
+    
 })
 
 

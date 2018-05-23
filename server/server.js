@@ -161,7 +161,7 @@ app.post('/users', (req, res) => {
     }).then((token) => {
         res.header('x-auth', token).send(user);
     }).catch((e) => {
-        res.status(401).send({
+        res.status(400).send({
             todo: {},
             success: false,
             message: e.errmsg
@@ -179,7 +179,7 @@ app.post('/users', (req, res) => {
 // middleware auth
 
 app.get('/users/me', authenticate, (req, res) => {
-   res.status(200).send(req.user);
+   res.send(req.user);
 })
 
 app.listen(port, () => {
